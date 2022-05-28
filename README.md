@@ -1,4 +1,6 @@
 # Oracle Linux 8 HPC
+for deployment from Raspberry Pi running Oracle Linux 8
+
 This project is collection of bash scripts and config files to automatically deploy rhel8-based HPC with PXE-install and kickstart files. Supports both BIOS-based and EFI PXE scenarios. Project's webpage is here: https://centoshpc.wordpress.com/
 
 Please do not e-mail me asking for support. These scripts are not guaranteed to work and are provided for your self-development. However if you are interested, you can join this project and contribute to its development on GitHub.
