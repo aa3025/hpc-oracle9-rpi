@@ -11,15 +11,16 @@ Terms:
 
 Deployment steps:
 
-1) install the master node (a.k.a. server, head node) using Oracle Linux 8 ISO (minimal install is OK), boot it, make sure the network is up (configure external LAN during installation of OL8 on master), proceed further from its terminal. Oracle Linux 8 dvd can be downloaded free of charge from https://edelivery.oracle.com/osdc/faces/Home.jspx  (iso name V983280-01.iso)
+1) install the master node (a.k.a. server, head node) using Oracle Linux 8 ISO (minimal install is OK), boot it, make sure the network is up (configure external LAN during installation of OL8 on master), proceed further from its terminal. Oracle Linux 8 dvd can be downloaded free of charge from 
+https://yum.oracle.com/ISOS/OracleLinux/OL8/u6/x86_64/OracleLinux-R8-U6-x86_64-dvd.iso
 
 Do not add any users during initial installation of the head node (only root). You will add other users after deployment of the HPC (using ./scripts/newuser).
 
 2) get the updated version of this repository
 
-    2.1 From  https://github.com/aa3025/oracle_linux_8_hpc
+    2.1 From  https://github.com/aa3025/hpc-oracle8-rpi
     
-    2.2 Uncompress the archive or clone our project's git tree "git clone https://github.com/aa3025/oracle_linux_8_hpc.git"
+    2.2 Uncompress the archive or clone our project's git repository "git clone https://github.com/aa3025/hpc-oracle8-rpi.git"
     
     2.3 If you failed to do above steps do not proceed further.
     
