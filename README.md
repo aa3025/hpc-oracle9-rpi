@@ -31,7 +31,7 @@ Do not add any users during initial installation of the head node (only root). Y
 
 5) Download OL8 install DVD
 
-6) cd oracle_linux_8_hpc and execute "./install.sh ../OL8xxxx.iso" from this folder (where ../OL8xxxx.iso is relative path to OL8 iso file). You will be prompted in a minute to enter internal and external LAN interface names. This is the only input required form user.
+6) ''cd hpc_oracle8-rpi'' and execute "./install.sh ../OL8xxxx.iso" from this folder (where ../OL8xxxx.iso is relative path to OL8 iso file). You will be prompted in a minute to enter internal and external LAN interface names. This is the only input required form user.
 
 5) Once install.sh finishes, go and power up all your compute nodes (its better to do it one-by-one in an orderly fasion, their hostnames will be based on their DHCP addresses (node1, node2...), so if you want any kind of "system" in their naming make sure they boot with interval, so that previous one already obtained IP before the next one boots). They must be BIOS-configured to boot from network (PXE boot).
 
