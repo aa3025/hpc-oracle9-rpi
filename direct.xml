@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<direct>
+  <passthrough ipv="ipv4">-t nat -I POSTROUTING -o eth0 -j MASQUERADE -s 172.16.0.0/16</passthrough>
+  <passthrough ipv="ipv4">-I FORWARD -i enp1s0u2 -j ACCEPT</passthrough>
+  <passthrough ipv="ipv4">-t nat -I POSTROUTING -o enp1s0u2 -j MASQUERADE -s 172.16.0.0/16</passthrough>
+  <passthrough ipv="ipv4">-I FORWARD -i eth0 -j ACCEPT</passthrough>
+</direct>
