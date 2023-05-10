@@ -1,4 +1,4 @@
-# Oracle Linux 9 HPC
+# Oracle Linux 9 PXE Network installer on Raspberry Pi
 for deployment from Raspberry Pi running Oracle Linux 9
 
 This project is collection of bash scripts and config files to automatically deploy rhel8-based HPC with PXE-install and kickstart files. Supports both BIOS-based and EFI PXE scenarios. Project's webpage is here: https://centoshpc.wordpress.com/
