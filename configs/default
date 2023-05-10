@@ -1,11 +1,11 @@
 default menu.c32
 prompt 1
 timeout 10
-MENU TITLE OL8 PXE Menu
+MENU TITLE OL9 PXE Menu
 LABEL ol8_pxe_x64
-MENU LABEL OL8 X64
+MENU LABEL OL9 X64
 KERNEL vmlinuz
-APPEND initrd=initrd.img  inst.repo=http://172.16.0.254/OL8/  inst.ks=http://172.16.0.254/ks-bios.cfg inst.sshd
+APPEND initrd=initrd.img  inst.repo=http://172.16.0.254/OL9/  inst.ks=http://172.16.0.254/ks-bios.cfg inst.sshd
 
 LABEL Boot from 1st HDD
 localboot 0

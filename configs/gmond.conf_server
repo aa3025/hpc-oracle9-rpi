@@ -27,7 +27,7 @@ globals {
  * tag that will wrap all hosts collected by this instance.
  */
 cluster {
-  name = "My CentOS7 HPC"
+  name = "My Oracle Linux 9 HPC"
   owner = ""
   latlong = "unspecified"
   url = "unspecified"

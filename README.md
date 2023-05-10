@@ -1,5 +1,5 @@
-# Oracle Linux 8 HPC
-for deployment from Raspberry Pi running Oracle Linux 8
+# Oracle Linux 9 HPC
+for deployment from Raspberry Pi running Oracle Linux 9
 
 This project is collection of bash scripts and config files to automatically deploy rhel8-based HPC with PXE-install and kickstart files. Supports both BIOS-based and EFI PXE scenarios. Project's webpage is here: https://centoshpc.wordpress.com/
 
@@ -11,27 +11,24 @@ Terms:
 
 Deployment steps:
 
-1) install the master node (a.k.a. server, head node) using Oracle Linux 8 ISO (minimal install is OK), boot it, make sure the network is up (configure external LAN during installation of OL8 on master), proceed further from its terminal. Oracle Linux 8 dvd can be downloaded free of charge from 
-https://yum.oracle.com/ISOS/OracleLinux/OL8/u6/x86_64/OracleLinux-R8-U6-x86_64-dvd.iso
-
-Do not add any users during initial installation of the head node (only root). You will add other users after deployment of the HPC (using ./scripts/newuser).
+1) Flash Oracle Linux 9 to a Raspberry Pi 4 board, boot it, expand root fs if needed (will need space for DVD image), make sure the network is up, proceed further from its terminal. Oracle Linux 9 RPi image and x86_64 DVD, which can be downloaded free of charge from Oracle Linux website: https://yum.oracle.com/ISOS/OracleLinux/OL9/u1/x86_64/OracleLinux-R9-U1-x86_64-dvd.iso.
 
 2) get the updated version of this repository
 
-    2.1 From  https://github.com/aa3025/hpc-oracle8-rpi
-    
-    2.2 Uncompress the archive or clone our project's git repository "git clone https://github.com/aa3025/hpc-oracle8-rpi.git"
-    
-    2.3 If you failed to do above steps do not proceed further.
-    
+    2.1 From  https://github.com/aa3025/hpc-oracle9-rpi
 
-3) Your installed master node must have the external network adapter configured, up and running, e.g. with NetworkManager or any other way. 
+    2.2 Uncompress the archive or clone our project's git repository "git clone https://github.com/aa3025/hpc-oracle9-rpi.git"
+
+    2.3 If you failed to do above steps do not proceed further.
+
+
+3) Your installed master node (RPi) must have the external network adapter configured, up and running, e.g. with NetworkManager or any other way. 
 
 4) The 2nd network adapter must be connected to the internal network of HPC (i.e. via switch or hub), where all the "compute" nodes will be booting up from. All compute nodes must be connected to the same hub with their (not necessarily) 1st network adapter and configured to boot from LAN (PXE boot).
 
-5) Download OL8 install DVD
+5) Download OL9 install DVD
 
-6) ''cd hpc_oracle8-rpi'' and execute "./install.sh ../OL8xxxx.iso" from this folder (where ../OL8xxxx.iso is relative path to OL8 iso file). You will be prompted in a minute to enter internal and external LAN interface names. This is the only input required form user.
+6) ''cd hpc_oracle9-rpi'' and execute "./install.sh ../OL9.iso" from this folder (where ../OL9.iso is relative path to OL9 iso file). You will be prompted in a minute to enter internal and external LAN interface names. This is the only input required form user.
 
 5) Once install.sh finishes, go and power up all your compute nodes (its better to do it one-by-one in an orderly fasion, their hostnames will be based on their DHCP addresses (node1, node2...), so if you want any kind of "system" in their naming make sure they boot with interval, so that previous one already obtained IP before the next one boots). They must be BIOS-configured to boot from network (PXE boot).
 

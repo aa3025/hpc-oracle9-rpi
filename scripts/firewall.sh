@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Execute as ./firewall.sh <eth_internal> <eth_external>
+# Execute as ./firewall.sh <eth_internal> <eth_external> <"172.16.0."> <16>
 
 # firewalld configuration
 
@@ -15,23 +15,23 @@ else
 
 	eth_int=$1
 	eth_ext=$2
-	network="172.16.0"
-	subnet=16
+	network=$3   #"172.16.0"
+	subnet=$4
 
 fi
 
 
 
 echo "external eth: $eth_ext"
-echo "internal eth: $eth_int"
+echo "internal eth: $eth_int , network: ${network}.0/$subnet"
 
 # exit 0
 
 sysctl -w net.ipv4.ip_forward=1
 echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ip_forward.conf
 
-nmcli connection modify eth1 connection.zone external
-nmcli connection modify eth0 connection.zone internal
+# nmcli connection modify external connection.zone external
+# nmcli connection modify internal connection.zone internal
 
 firewall-cmd --zone=internal --permanent --change-interface=$eth_int
 firewall-cmd --zone=external --permanent --change-interface=$eth_ext
@@ -57,19 +57,16 @@ firewall-cmd --permanent --zone=internal --add-service=rpc-bind
 #firewall-cmd --permanent --zone=internal --add-port=8649/tcp
 #firewall-cmd --permanent --zone=internal --add-port=7321/tcp
 
-
 # external services
 firewall-cmd --permanent --zone=external --add-service=ssh
 firewall-cmd --permanent --zone=external --add-service=vnc-server
 firewall-cmd --permanent --zone=external --add-service=http
 
 #NAT
-
-firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $eth_ext -j MASQUERADE -s 172.16.0.0/16
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o $eth_ext -j MASQUERADE -s ${network}.0/$subnet
 firewall-cmd --permanent --direct --passthrough ipv4 -I FORWARD -i $eth_int -j ACCEPT
 
 firewall-cmd --reload
-
 
 
 #systemctl restart network

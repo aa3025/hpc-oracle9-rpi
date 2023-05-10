@@ -1,20 +1,25 @@
 #!/bin/bash
 
-# Run as sh ./install.sh <full_path_to_OL8_dvd.iso>
-# OL8 dvd (free) can be downloaded from https://edelivery.oracle.com/osdc/faces/Home.jspx (or search for V983280-01.iso)
+# Run as sh ./install.sh <full_path_to_OL9_dvd.iso>
+# OL9 dvd (free) can be downloaded from https://yum.oracle.com/oracle-linux-isos.html
+# this is setup for x86_64 clients!
+# 
+
+
 
 # Note: your external network interface must be configuured, up and running
-# It will be put in "external zone" of firewalld by this script
+# It will be put in "external" zone of firewalld by this script
 
 network="172.16.0" #/16  HPC internal network -- still hardwired in config scripts for dhcp and network etc
 
 #################### Do we have an ISO? ##########################
 
 if [ "$1" = "-h" ]; then
-    echo "Usage: `basename $0` /path/to/OL8_install_DVD.iso"
+    echo "Usage: `basename $0` /path/to/OL9_install_DVD.iso"
     exit 0
 elif [ "$1" = "" ]; then
     echo "You have to supply the location if the OL8 dvd ISO file see `basename $0 -h`"
+    echo "You can get OL9 ISO here: https://yum.oracle.com/ISOS/OracleLinux/OL9/u1/x86_64/OracleLinux-R9-U1-x86_64-dvd.iso"
     exit 0
 elif [ ! -z "$1" ]; then
     if [ -f $1 ]; then isoname=$1; fi
@@ -24,27 +29,24 @@ fi
 ### Prerequisites #### 
 chmod -R +x ./scripts/*
 
-
-#cat ./configs/epel.repo > /etc/yum.repos.d/epel.repo
-
 #yum install network-scripts -y #depricated
 
-yum install epel-release -y &&
-yum install wget readline ncurses-compat-libs perl pdsh pdsh-rcmd-ssh -y &&
-
-#fixing pdsh issue
-ln -s /usr/lib64/libreadline.so.7 /usr/lib64/libreadline.so.6 &&
-ln -s /usr/lib64/libhistory.so.7 /usr/lib64/libhistory.so.6 &&
+yum install epel-release wget readline ncurses-compat-libs perl -y &&
 
 #mkdir -p rpms
 #cd rpms
-#wget https://yum.oracle.com/repo/OracleLinux/OL7/developer_EPEL/x86_64/getPackage/pdsh-2.31-1.el7.x86_64.rpm
-#wget https://yum.oracle.com/repo/OracleLinux/OL7/developer_EPEL/x86_64/getPackage/pdsh-rcmd-ssh-2.31-1.el7.x86_64.rpm
-#wget https://yum.oracle.com/repo/OracleLinux/OL7/developer_EPEL/x86_64/getPackage/pdsh-rcmd-rsh-2.31-1.el7.x86_64.rpm
-#rpm -Uvh pdsh-* --nodeps
+#rm -fr pdsh*.rpm
+#wget https://yum.oracle.com/repo/OracleLinux/OL7/developer_EPEL/aarch64/getPackage/pdsh-2.34-5.el7.aarch64.rpm
+#wget https://yum.oracle.com/repo/OracleLinux/OL7/developer_EPEL/aarch64/getPackage/pdsh-rcmd-ssh-2.34-5.el7.aarch64.rpm
+rpm -Uvh rpms/pdsh-*.rpm --nodeps
 #cd ../
 
-yum install mc nano net-tools nfs-utils dhcp-server tftp httpd openssh-server firewalld tftp-server git xinetd shim syslinux-tftpboot vsftpd opensm pdsh infiniband-diags -y &&
+#fixing pdsh issue
+ln -s /usr/lib64/libreadline.so.8 /usr/lib64/libreadline.so.6 
+ln -s /usr/lib64/libhistory.so.8 /usr/lib64/libhistory.so.6 
+
+
+yum install mc nano net-tools nfs-utils dhcp-server tftp httpd openssh-server firewalld tftp-server git shim syslinux-tftpboot vsftpd tcpdump opensm infiniband-diags -y &&
 
 mkdir -p /tftpboot
 rm -fr /var/lib/tftpboot
@@ -69,7 +71,7 @@ echo ""
 echo "Here is the list of your network interfaces:"
 
 # ip link show
-nmcli connection show &&
+nmcli connection show
 
 echo "Enter your INTERNAL network interface here: (e.g. enp3s0), it will be configured with IP: $network.254/16 (zone internal):"
     read eth_int
@@ -77,9 +79,12 @@ echo "Enter your INTERNAL network interface here: (e.g. enp3s0), it will be conf
 echo "Enter your EXTERNAL network interface name: (e.g. enp3s1), it will have existing config from /etc/sysconfig/network-scripts/ifcfg-..."
     read eth_ext
 
+
+
+
 ###################### HOSTNAME of headnode #################
-echo NETWORKING=yes > /etc/sysconfig/network &&
-echo HOSTNAME=master > /etc/sysconfig/network &&
+echo NETWORKING=yes > /etc/sysconfig/network
+echo HOSTNAME=master > /etc/sysconfig/network
 
 # disable SELINUX temporarely
 setenforce 0
@@ -99,7 +104,7 @@ echo DEVICE=\"$eth_int\" >> /etc/sysconfig/network-scripts/ifcfg-$eth_int &&
 echo ZONE=\"internal\" >>  /etc/sysconfig/network-scripts/ifcfg-$eth_int &&
 
 ifconfig $eth_int down &&
-ifconfig $eth_int $network.254 netmask 255.255.0.0 broadcast 172.16.0.255 &&
+ifconfig $eth_int ${network}.254 netmask 255.255.0.0 broadcast ${network}.255 &&
 ifconfig $eth_int up &&
 
 #ifup $eth_int
@@ -110,9 +115,14 @@ nmcli dev set $eth_ext managed no &&
 
 service NetworkManager restart &&
 
-#nmcli connection up $eth_ext &&
-#nmcli connection up $eth_int &&
+ext_conn_name=$(nmcli | grep "$eth_ext: connected to" | cut -d':' -f2 | cut -d' ' -f4)
+int_conn_name=$(nmcli | grep "$eth_int: connected to" | cut -d':' -f2 | cut -d' ' -f4)
 
+nmcli connection modify "$ext_conn_name" con-name external
+nmcli connection modify "$int_conn_name" con-name internal
+
+nmcli connection up $eth_ext &&
+nmcli connection up $eth_int &&
 
 ###################### Attempt to configure NAT #########################
 ./scripts/reset_firewalld.sh &&
@@ -156,13 +166,18 @@ cp -v syslinux_x86_64/chain.c32 /tftpboot/ &&
 
 ## ##################### OS ISO image is mounted in the http docs tree #################
 echo ISO is $isoname ...
-installpath="/var/www/html/OL8" &&
+installpath="/var/www/html/OL9" &&
+
 
 mkdir -p $installpath &&
 umount $installpath && # if previous install left it there
 
 echo "Mounting "$isoname "...."
 mount -o loop -t iso9660 ${isoname} ${installpath} &&
+
+#making ISO mount premanent after reboot
+echo "mount -o loop -t iso9660 ${isoname} ${installpath}" >> /etc/rc.local
+chmod +x /etc/rc.local
 
 #################### TFTP EFI-based nodes #####################################
 
