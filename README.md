@@ -1,7 +1,7 @@
 # Oracle Linux 9 PXE Network installer on Raspberry Pi
 for deployment of x86_64 machines from Raspberry Pi [4] board running Oracle Linux 9 (aarch64)
 
-This project is collection of bash scripts and config files to automatically deploy rhel8-based HPC with PXE-install and kickstart files. Supports both BIOS-based and EFI PXE scenarios. Project's webpage is here: https://centoshpc.wordpress.com/
+This project is collection of bash scripts and config files to automatically deploy rhel9-based HPC with PXE-install and kickstart files. Supports both BIOS-based and EFI PXE scenarios. Project's webpage is here: https://centoshpc.wordpress.com/
 
 Please do not e-mail me asking for support. These scripts are not guaranteed to work and are provided for your self-development. However if you are interested, you can join this project and contribute to its development on GitHub.
 
