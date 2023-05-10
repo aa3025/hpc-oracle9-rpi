@@ -5,9 +5,12 @@ This project is collection of bash scripts and config files to automatically dep
 
 Please do not e-mail me asking for support. These scripts are not guaranteed to work and are provided for your self-development. However if you are interested, you can join this project and contribute to its development on GitHub.
 
+
 Terms: 
-    - master is the headnode of HPC, it must be installed first from official Oracle Linux 8 dvd
-    - node(s) are compute nodes which reside in a pivate network of the master (on the 2nd LAN adapter)
+
+- master is the headnode of HPC (RPi board), it must be installed (flashed) first from Oracle Linux 9 image for RPi 4
+
+- node(s) are compute nodes which reside in a pivate network of the master (on the 2nd LAN adapter)
 
 Deployment steps:
 
